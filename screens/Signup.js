@@ -3,13 +3,10 @@ import React from 'react';
 import * as Font from 'expo-font';
 import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
-import firebase from '../config';
-import { AuthContext } from '../Context';
-
-
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 const Signup = () => {
 
-  const {signIn} = React.useContext(AuthContext);
 
     const [loaded] = useFonts({
         Lexend_ExtraBold: require('../assets/fonts/Lexend-ExtraBold.ttf'),
@@ -17,22 +14,6 @@ const Signup = () => {
         Lexend_Regular: require('../assets/fonts/Lexend-Regular.ttf'),
         Lexend_Medium: require('../assets/fonts/Lexend-Medium.ttf'),
       });
-      const [email, setEmail] = useState('');
-      const [password, setPassword] = useState('');
-      const [confirmPassword, setConfirmPassword] = useState('');
-      const [passwordError, setPasswordError] = useState('');
-      const [confirmPasswordError, setConfirmPasswordError] = useState('');
-    
-      const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[A-Z]).{8,}$/;
-    
-        if (!passwordRegex.test(password)) {
-          return "Password must have at least 8 characters and contain at least one capital letter";
-        } else {
-          return "";
-        }
-      };
-    
      
 
   if (!loaded) {
@@ -41,7 +22,7 @@ const Signup = () => {
 
   return (
     
-    <View style={{backgroundColor:'#10002B', flex:1 }}>
+    <View style={{backgroundColor:'black', flex:1 }}>
 
     <Image style={styles.ellipseTop}
                 source={require('../assets/Ellipse1.png')}/>
@@ -83,7 +64,6 @@ const Signup = () => {
             color = "#E0AAFF"
             placeholderTextColor="#E0AAFF"
             placeholder="EMAIL"
-            onChangeText={text => setEmail(text)}
 
 
             
@@ -103,10 +83,8 @@ const Signup = () => {
             placeholderTextColor="#E0AAFF"
             placeholder="PASSWORD"
             secureTextEntry={true}
-            onChangeText={handlePasswordChange}
             />
         </View>
-{passwordError ? <Text>{passwordError}</Text> : null}
         <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
 
         <Image
@@ -120,24 +98,23 @@ const Signup = () => {
             placeholderTextColor="#E0AAFF"
             placeholder="CONFIRM PASSWORD"
             secureTextEntry={true}
-            onChangeText={handleConfirmPasswordChange}
             />
-            {confirmPasswordError ? <Text>{confirmPasswordError}</Text> : null}
+           
 
         </View>
         
-        <TouchableOpacity onPress={handleSubmit} disabled={isSubmitDisabled} >
+        <TouchableOpacity  >
 
-        <Button onPress={() => signIn()} title="Sign in" />
+       
 
-          {/* <LinearGradient
+           <LinearGradient
             colors={['#3C096C', '#8445B8', '#C77DFF']}
             style={styles.signupButton}
             start={{x:0,y:0}}
             end={{x:1,y:0}}>
             <Text style={{fontFamily:'Lexend_Medium',color:"white",fontSize:20,textAlign:"center"}}>SIGNUP</Text>
  
-          </LinearGradient> */}
+          </LinearGradient>
         </TouchableOpacity>
           
         
@@ -303,4 +280,3 @@ const styles = StyleSheet.create({
 
       },
 })
-

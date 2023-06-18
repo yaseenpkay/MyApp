@@ -1,272 +1,192 @@
-import { Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View , SafeAreaView, ImageBackground} from 'react-native'
-import React from 'react';
-import * as Font from 'expo-font';
-import { useFonts } from 'expo-font';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Modal, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 
+const place4 = require("../assets/Up.png");
 
+const Overview = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [inputText, setInputText] = useState('');
+  const [transactionName, setTransactionName] = useState('');
+  const [transactions, setTransactions] = useState([]);
 
-const Verthe = () => {
+  const handleButtonPress = () => {
+    setModalVisible(true);
+  };
 
+  const handleAddIncome = () => {
+    const amount = parseInt(inputText);
+    const transaction = { type: 'income', amount, name: transactionName };
+    setTransactions([...transactions, transaction]);
+    setInputText('');
+    setTransactionName('');
+    setModalVisible(false);
+  };
 
-    const [loaded] = useFonts({
-        Lexend_ExtraBold: require('../assets/fonts/Lexend-ExtraBold.ttf'),
-        Lexend_SemiBold: require('../assets/fonts/Lexend-SemiBold.ttf'),
-        Lexend_Regular: require('../assets/fonts/Lexend-Regular.ttf'),
-        Lexend_Medium: require('../assets/fonts/Lexend-Medium.ttf'),
-      });
-    
-
-  if (!loaded) {
-    return null;
-  }
+  const handleAddExpense = () => {
+    const amount = parseInt(inputText);
+    const transaction = { type: 'expense', amount, name: transactionName };
+    setTransactions([...transactions, transaction]);
+    setInputText('');
+    setTransactionName('');
+    setModalVisible(false);
+  };
 
   return (
-    
-    <View style={{backgroundColor:'#10002B', flex:1 }}>
-
-    <Image style={styles.ellipseTop}
-                source={require('../assets/Ellipse1.png')}/>
-
-      <View style={styles.mainConatiner}>
-      
-            
-      <Text style={{fontFamily:'Lexend_ExtraBold', color: 'white', fontSize:32,marginHorizontal:35,marginVertical:30}}>Login</Text>
-        <View style={{flexDirection: 'row',backgroundColor: '#10002B',marginHorizontal:35, borderRadius:7,width:300,height:73 ,padding:13,...styles.elevation
-        }}>
-
-
-              <View style={{flexDirection: 'row', flex: 1 }}>
-          {/* Bottom component */}
-          <View style={styles.bottomComponentEmail}>
-          <Image
-              style={styles.tinyLogo}
-              source={require('../assets/email.png')}
-            />
-
-            <TextInput
-            style={styles.input}
-            textAlign='left'
-            color = "#E0AAFF"
-            placeholder=""
-            
-            />
-          </View>
-
-          {/* Top component */}
-          <View style={styles.topComponentEmail}>
-            <Text style={{fontFamily:'Lexend_Medium',color:'#E0AAFF',opacity:0.3,bottom:7}}>EMAIL </Text>
-
-          </View>
-        </View>
-           
-
-            {/* <Image
-              style={styles.tinyLogo}
-              source={require('../assets/email.png')}
-            /> */}
-            {/* <Text style={{fontFamily:'Lexend_Medium',color:'#E0AAFF',opacity:0.3,bottom:7}}>EMAIL </Text> */}
-
-            {/* <TextInput
-            style={styles.input}
-            textAlign='left'
-            color = "#E0AAFF"
-            placeholder=""
-            
-            /> */}
-        </View>
-        
-        
-
-        <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
-
-        <Image
-              style={styles.smallIcons}
-              source={require('../assets/Password.png')}
-            />
-            <TextInput
-            style={styles.lineInput}
-            textAlign='left'
-            color = "#E0AAFF"
-            placeholderTextColor="#E0AAFF"
-            placeholder="PASSWORD"
-            secureTextEntry={true}
-            
-            />
-        </View>
-
-        
-
-        <TouchableOpacity style={{height:53,width:156,borderColor:'white',borderWidth:5}}>
-       
-          <LinearGradient
-            colors={['#3C096C', '#8445B8', '#C77DFF']}
-            style={styles.signupButton}
-            start={{x:0,y:0}}
-            end={{x:1,y:0}}>
-            <Text style={{fontFamily:'Lexend_Medium',color:"white",fontSize:20,textAlign:"center"}}>LOGIN</Text>
- 
-          </LinearGradient>
-        </TouchableOpacity>
-          
-        
-
-
-      </View>
-
-
-      <View style={{ flex: 1 }}>
-      {/* Bottom component */}
-      <View style={styles.bottomComponent}>
-        <Image style={styles.ellipseBottom} source={require('../assets/Ellipse2.png')} />
-      </View>
-
-      {/* Top component */}
-      <View style={styles.topComponent}>
-        <Text style={styles.signupText}>
-          Already have an account? <Text style={styles.bottomText}>Sign in</Text>
+    <ScrollView style={styles.container}>
+      <View style={styles.incomeBox}>
+        <Text style={styles.balanceText}>Your Balance</Text>
+        <Text style={styles.balanceAmount}>
+          {transactions.reduce((total, transaction) => {
+            if (transaction.type === 'income') {
+              return total + transaction.amount;
+            } else {
+              return total - transaction.amount;
+            }
+          }, 0)}
         </Text>
       </View>
-    </View>
 
-      
-      
-      
-      
+      <View style={styles.transactionList}>
+        {transactions.map((transaction, index) => (
+          <View key={index} style={styles.transactionItem}>
+            <Text style={transaction.type === 'income' ? styles.incomeText : styles.expenseText}>
+              {transaction.name} - {transaction.type === 'income' ? '+' : '-'} {transaction.amount}
+            </Text>
+          </View>
+        ))}
+      </View>
 
-    </View>
-  )
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setTransactionName(text)}
+              value={transactionName}
+              placeholder="Enter transaction name"
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setInputText(text)}
+              value={inputText}
+              placeholder="Enter amount"
+              keyboardType="numeric"
+            />
+            <TouchableOpacity onPress={handleAddIncome}>
+              <View style={styles.addButton}>
+                <Text style={styles.buttonText}>Add Income</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleAddExpense}>
+              <View style={styles.addButton}>
+                <Text style={styles.buttonText}>Add Expense</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <TouchableOpacity style={styles.buttonContainer} onPress={handleButtonPress}>
+        <Image source={place4} style={styles.post} />
+      </TouchableOpacity>
+    </ScrollView>
+  );
 }
 
-export default Verthe
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#10002B',
+    padding: 16,
+  },
+  incomeBox: {
+    backgroundColor: '#310048',
+    height: 200,
+    width: 340,
+    borderRadius: 20,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 100,
+  },
+  balanceText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginBottom: 10,
+  },
+  balanceAmount: {
+    color: 'white',
+    fontSize: 24,
+  },
+  transactionList: {
+    marginBottom: 20,
+  },
+  transactionItem: {
+    backgroundColor: '#310048',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  incomeText: {
+    color: 'green',
+    fontSize: 20,
+  },
+  expenseText: {
+    color: 'red',
+    fontSize: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  addButton: {
+    backgroundColor: 'black',
+    height: 40,
+    width: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+   
+    alignSelf: 'center',
+    marginBottom: 100, // Adjust this value to add some spacing below the button
+  },
+  post: {
+    width: 30,
+    height: 30,
+    marginBottom: 100, // Adjust this value to add some spacing below the button
 
-    mainConatiner:{
-      flex:1,
-      
-    },
+  },
+});
 
-    bottomComponentEmail:{
-      borderColor:'white',
-      borderWidth:2
-    },
-
-    topComponentEmail:{
-      borderColor:'white',
-      borderWidth:2
-    },
-  
-    input: {
-        width:300,
-        height: 73,
-        borderEndColor:"black",
-        //textAlign:'left',
-        color :"#E0AAFF",
-        fontSize:24,
-        fontFamily:'Lexend_SemiBold',
-        
-    },
-
-    lineInput:{
-      paddingLeft:10,
-      fontFamily:'Lexend_Medium',
-      opacity:.3,
-      width:295,
-      
-    },
-
-    smallIcons:{
-      top:8,
-      
-    },
-
-    signupButton:{
-      position:'relative',
-      top:47,
-      left:140,
-      height:53,
-      width:156,
-      marginRight: 40,
-      marginLeft: 40,
-      marginTop: 10,
-      padding:9,
-      backgroundColor: '#68a0cf',
-      borderRadius: 50,
-      marginHorizontal:35,
-      
-      
-    },
-
-    tinyLogo: {
-        width: 34.6,
-        height: 26.5,
-        //alignItems:'center',
-        //verticalAlign:'middle',
-        alignSelf:'center',
-        left:10,
-      },
-
-             
-      shadowProp: {
-        shadowColor: '#171717',
-        shadowOffset: {width: -2, height: 4},
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-      },
-
-      elevation: {
-        elevation: 10,
-        shadowColor: 'black',
-        
-        
-
-      },
-      ellipseTop:{
-        marginHorizontal:130,
-      
-
-      },
-
-      ellipseBottom:{
-        //justifyContent:'flex-end',
-        bottom:0,
-        //height:177
-
-      },
-
-      bottomComponent: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        alignItems: 'center',
-      },
-
-      topComponent: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        alignItems: 'center',
-      },
-      signupText: {
-        textAlign: 'center',
-        color: '#E0AAFF',
-        fontSize:16,
-        fontFamily:'Lexend_Regular',
-        bottom:55,
-        opacity:.7
-      },
-      bottomText: {
-        fontWeight: 'bold',
-        color: 'white',
-        opacity:1
-      },
-
-      mainConatiner:{
-        left:25,
-        bottom:1,
-
-      },
-})
-
+export default Overview;

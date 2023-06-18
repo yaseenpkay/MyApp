@@ -12,24 +12,8 @@ import { AuthContext } from './Context';
 
 
 export default function App() {
-  const [userToken, setUserToken] = useState(null);
-  const authContext = useMemo(() => {
-    return {
-      signIn: () => {
-        setUserToken('asdf');
-      },
-      signUp: () => {
-        setUserToken('asdf');
-      },
-      signOut: () => {
-        setUserToken(null);
-      },
-    };
-  }, []);
   return (
-    <AuthContext.Provider value={authContext}>
-      <Signup />
-    </AuthContext.Provider>
+    <Route/>
   )
   ;
 }
