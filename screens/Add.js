@@ -31,21 +31,29 @@ const Add = ({ updateOverview }) => {
   const [incomeAmount, setIncomeAmount] = useState("");
   const [incomeDescription, setIncomeDescription] = useState("");
 
-  const [inputValue, setInputValue] = useState("");
+  const [expenseCategory, setExpenseCategory] = useState("");
 
   const handlePress = (value) => {
-    setInputValue(value);
+    setExpenseCategory(value);
   };
 
-  const handleDateChange = (date) => {
+  const [expensedate, setExpenseDate] = useState("");
+  const [incomedate, setIncomeDate] = useState("");
+
+  /* const handleDateChange = (date) => {
     // Do something with the selected date
     console.log(date);
-  };
+  }; */
 
   const db = getFirestore(app);
 
   const writeExpense = async () => {
-    if (!expenseAmount || !expenseDescription) {
+    if (
+      !expenseAmount ||
+      !expenseDescription ||
+      !expensedate ||
+      !expenseCategory
+    ) {
       setErrorMessage("Please enter both amount and description");
       return;
     }
@@ -54,22 +62,23 @@ const Add = ({ updateOverview }) => {
       const docRef = await addDoc(collection(db, "expenses"), {
         amount: expenseAmount,
         description: expenseDescription,
-        category: inputValue,
-        //date: date,
+        category: expenseCategory,
+        date: expensedate,
       });
       console.log("Document written with ID: ", docRef.id);
 
       // Clear out the input fields
       setExpenseAmount("");
       setExpenseDescription("");
-      setInputValue("");
+      setExpenseCategory("");
+      setExpenseDate("");
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
 
   const writeIncome = async () => {
-    if (!incomeAmount || !incomeDescription) {
+    if (!incomeAmount || !incomeDescription || !incomedate) {
       setErrorMessage("Please enter both amount and description");
       return;
     }
@@ -78,14 +87,15 @@ const Add = ({ updateOverview }) => {
       const docRef = await addDoc(collection(db, "income"), {
         amount: incomeAmount,
         description: incomeDescription,
-        category: incomeCategory,
+        //category: incomeCategory,
+        date: incomedate,
       });
       console.log("Document written with ID: ", docRef.id);
 
       // Clear out the input fields
       setIncomeAmount("");
       setIncomeDescription("");
-      //setErrorMessage("");
+      setIncomeDate("");
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -117,9 +127,10 @@ const Add = ({ updateOverview }) => {
 
           <TextInput
             style={styles.input}
-            value={inputValue}
-            onChangeText={setInputValue}
-            placeholder="Enter text..."
+            value={expenseCategory}
+            placeholderTextColor={"#121112"}
+            onChangeText={setExpenseCategory}
+            placeholder="Choose Category"
           />
 
           <View style={styles.categoryContainer}>
@@ -201,7 +212,14 @@ const Add = ({ updateOverview }) => {
             </View>
           </View>
 
-          <CustomDatePicker onDateChange={handleDateChange} />
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            placeholder="Date"
+            placeholderTextColor={"#121112"}
+            value={expensedate}
+            onChangeText={setExpenseDate}
+          />
 
           <TouchableOpacity
             style={styles.button}
@@ -235,9 +253,18 @@ const Add = ({ updateOverview }) => {
             value={incomeDescription}
             onChangeText={setIncomeDescription}
           />
-          <Text style={styles.normalText}>Category</Text>
+          {/* <Text style={styles.normalText}>Category</Text> */}
 
-          <CustomDatePicker onDateChange={handleDateChange} />
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            placeholder="Date"
+            placeholderTextColor={"#121112"}
+            value={incomedate}
+            onChangeText={setIncomeDate}
+          />
+
+          {/*  <CustomDatePicker onDateChange={handleDateChange} /> */}
 
           <TouchableOpacity style={styles.button} onPress={() => writeIncome()}>
             <Image source={require("../assets/addbuttonbig.png")} />

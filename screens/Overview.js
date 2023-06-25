@@ -51,10 +51,12 @@ const Overview = () => {
           const data = doc.data();
           const amount = data.amount; // Assuming the amount field exists in the documents
           const description = data.description;
+          const date = data.date;
 
           const incomeObject = {
             amount: Number(amount),
             description: description,
+            date: date,
             // Add other fields from the document as needed
           };
 
@@ -77,17 +79,18 @@ const Overview = () => {
       try {
         const querySnapshot = await getDocs(collection(db, "expenses"));
         let totalExpense = 0;
-        // const incomeData = [];
         const expenseData = [];
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const amount = data.amount; // Assuming the amount field exists in the documents
           const description = data.description;
+          const date = data.date;
 
           const expenseObject = {
             amount: Number(amount),
             description: description,
+            date: date,
             // Add other fields from the document as needed
           };
 

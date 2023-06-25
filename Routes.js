@@ -10,7 +10,7 @@ import Transaction from "./screens/Transaction";
 import Add from "./screens/Add";
 import Extra from "./screens/Extra";
 import People from "./screens/People";
-import SignUp from "./screens/SignUp";
+import SignUp from "./screens/Signup";
 import Test from "./screens/Test";
 import Testt from "./screens/Testt";
 

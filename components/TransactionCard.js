@@ -13,6 +13,7 @@ const TransactionCard = ({ item }) => {
       </View>
       <View style={styles.rightSection}>
         <Text style={styles.righttext}>+ {item.amount}</Text>
+        <Text style={styles.datetext}>{item.date}</Text>
       </View>
     </View>
   );
@@ -56,11 +57,20 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend_SemiBold",
     //fontWeight: 'bold',
     color: "#B891D9",
+    opacity: 0.8,
   },
   righttext: {
     color: "green",
     fontSize: 20,
     fontFamily: "Lexend_SemiBold",
+    opacity: 0.6,
+  },
+
+  datetext: {
+    color: "#B891D9",
+    fontSize: 10,
+    fontFamily: "Lexend_Regular",
+    opacity: 0.6,
   },
 });
 

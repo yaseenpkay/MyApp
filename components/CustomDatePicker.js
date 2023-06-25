@@ -1,55 +1,69 @@
-// CustomDatePicker component
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { StyleSheet, View, Text } from "react-native";
+import { Calendar } from "react-native-calendars";
 
-const CustomDatePicker = ({ onDateChange }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
+const CustomDatePicker = () => {
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const showDatePicker = () => {
-    setShowPicker(true);
-  };
-
-  const handleDateChange = (event, date) => {
-    if (date !== undefined) {
-      setSelectedDate(new Date(date));
-      onDateChange(new Date(date));
-    }
-    setShowPicker(false);
+  const handleDateSelect = (date) => {
+    const selectedDateString = date.dateString;
+    console.log("Selected Date:", selectedDateString);
+    setSelectedDate(selectedDateString);
   };
 
   return (
-    <View>
-      <TouchableOpacity onPress={showDatePicker}>
-        <Text style={styles.dateButton}>Select Date</Text>
-      </TouchableOpacity>
-      {showPicker && (
-        <DateTimePicker
-          value={selectedDate}
-          mode="date"
-          display="calendar"
-          onChange={handleDateChange}
-        />
-      )}
+    <View style={styles.container}>
+      <Calendar
+        style={styles.cal}
+        onDayPress={handleDateSelect}
+        markedDates={{
+          [selectedDate]: {
+            selected: true,
+            marked: true,
+            selectedColor: "blue",
+          },
+        }}
+        theme={{
+          backgroundColor: "#332F36",
+          calendarBackground: "#332F36",
+          textSectionTitleColor: "#b6c1cd",
+          selectedDayBackgroundColor: "#332F36",
+          selectedDayTextColor: "#ffffff",
+          todayTextColor: "#B25C78",
+          dayTextColor: "white",
+          textDisabledColor: "black",
+          dotColor: "#332F36",
+          selectedDotColor: "#ffffff",
+          arrowColor: "#B891D9",
+          monthTextColor: "#B891D9",
+          indicatorColor: "#B891D9",
+          textDayFontFamily: "Lexend_Regular",
+          textMonthFontFamily: "Lexend_Medium",
+          textDayHeaderFontFamily: "Lexend_Regular",
+          textDayFontSize: 15,
+          textMonthFontSize: 15,
+          textDayHeaderFontSize: 12,
+        }}
+      />
+      {/* Display transactions for the selected date */}
+      {/* Replace this with your own logic to fetch and display transactions */}
     </View>
   );
 };
 
+export default CustomDatePicker;
+
 const styles = StyleSheet.create({
-  dateButton: {
-    color: "gray",
-    fontFamily: "Lexend_Regular",
-    fontSize: 20,
-    alignSelf: "center",
-    textAlign: "center",
-    textAlignVertical: "center",
-    backgroundColor: "#121112",
-    width: 290,
-    height: 50,
-    borderRadius: 10,
-    margin: 10,
+  container: {
+    /* height: 400, // Adjust the height as needed
+    width: 500, // Adjust the width as needed */
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cal: {
+    borderRadius: 20,
+    width: 350,
+    height: 380,
+    marginTop: 20,
   },
 });
-
-export default CustomDatePicker;

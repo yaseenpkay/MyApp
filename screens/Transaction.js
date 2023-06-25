@@ -33,9 +33,6 @@ const Transaction = () => {
     return null;
   }
 
-  const data = [20, 45, 28, 80, 99, 43];
-  const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-
   return (
     <ScrollView style={{ backgroundColor: "black", flex: 1 }}>
       <SafeAreaView style={{ backgroundColor: "black", flex: 1 }}>
