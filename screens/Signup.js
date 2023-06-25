@@ -3,10 +3,13 @@ import React from 'react';
 import * as Font from 'expo-font';
 import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
-const Signup = () => {
+import { AuthContext } from '../Context';
+import { useContext } from 'react';
 
+
+
+const SignUp = () => {
+  const { signIn } = useContext(AuthContext);
 
     const [loaded] = useFonts({
         Lexend_ExtraBold: require('../assets/fonts/Lexend-ExtraBold.ttf'),
@@ -14,7 +17,7 @@ const Signup = () => {
         Lexend_Regular: require('../assets/fonts/Lexend-Regular.ttf'),
         Lexend_Medium: require('../assets/fonts/Lexend-Medium.ttf'),
       });
-     
+    
 
   if (!loaded) {
     return null;
@@ -22,7 +25,7 @@ const Signup = () => {
 
   return (
     
-    <View style={{backgroundColor:'black', flex:1 }}>
+    <View style={{backgroundColor:'#10002B', flex:1 }}>
 
     <Image style={styles.ellipseTop}
                 source={require('../assets/Ellipse1.png')}/>
@@ -30,8 +33,8 @@ const Signup = () => {
       <View style={styles.mainConatiner}>
       
             
-      <Text style={{fontFamily:'Lexend_ExtraBold', color: 'white', fontSize:32,marginHorizontal:35,marginVertical:30}}>Create Account</Text>
-        <View style={{flexDirection: 'row',backgroundColor: '#10002B',marginHorizontal:35, borderRadius:7,width:300,height:73 ,padding:13,...styles.elevation
+      <Text style={{fontFamily:'Lexend_ExtraBold', color: 'white', fontSize:28,marginHorizontal:15,marginVertical:30}}>Create Account</Text>
+        <View style={{flexDirection: 'row',backgroundColor: '#10002B',marginHorizontal:15, borderRadius:7,width:290,height:73 ,padding:13,...styles.elevation
         }}>
           
            
@@ -51,7 +54,7 @@ const Signup = () => {
             />
         </View>
         
-        <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1,top:2}}>
+        <View style={{flexDirection: 'row',marginHorizontal:15,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1,top:2}}>
 
         <Image
               style={{top:11}}
@@ -64,13 +67,14 @@ const Signup = () => {
             color = "#E0AAFF"
             placeholderTextColor="#E0AAFF"
             placeholder="EMAIL"
+            
 
 
             
             />
         </View>
 
-        <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
+        <View style={{flexDirection: 'row',marginHorizontal:15,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
 
         <Image
               style={styles.smallIcons}
@@ -83,9 +87,11 @@ const Signup = () => {
             placeholderTextColor="#E0AAFF"
             placeholder="PASSWORD"
             secureTextEntry={true}
+            
             />
         </View>
-        <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
+
+        <View style={{flexDirection: 'row',marginHorizontal:15,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
 
         <Image
               style={styles.smallIcons}
@@ -98,16 +104,13 @@ const Signup = () => {
             placeholderTextColor="#E0AAFF"
             placeholder="CONFIRM PASSWORD"
             secureTextEntry={true}
+            
             />
-           
-
         </View>
         
-        <TouchableOpacity  >
-
+        <TouchableOpacity onPress={() => signIn()}>
        
-
-           <LinearGradient
+          <LinearGradient
             colors={['#3C096C', '#8445B8', '#C77DFF']}
             style={styles.signupButton}
             start={{x:0,y:0}}
@@ -146,7 +149,7 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default SignUp
 
 const styles = StyleSheet.create({
 
@@ -187,7 +190,7 @@ const styles = StyleSheet.create({
 
     signupButton:{
       position:'relative',
-      top:47,
+      top:40,
       left:140,
       height:53,
       width:156,
@@ -280,3 +283,4 @@ const styles = StyleSheet.create({
 
       },
 })
+

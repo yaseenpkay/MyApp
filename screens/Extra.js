@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Text, Modal, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calculator } from 'react-native-calculator';
+import {AuthContext} from '../Context'
+import {useContext} from 'react'
 
 
 const Extras = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+
+  const {signOut} = useContext(AuthContext)
 
   const handleOptionPress = (option) => {
     setSelectedOption(option);
@@ -47,13 +51,7 @@ const Extras = () => {
             {/* Add currency conversion functionality here */}
           </View>
         );
-      case 'logout':
-        return (
-          <View>
-            <Text>Logout Option Selected</Text>
-            {/* Add logout functionality here */}
-          </View>
-        );
+      
       default:
         return null;
     }
@@ -94,7 +92,7 @@ const Extras = () => {
       </View>
 
       <View style={styles.row}>
-        <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('logout')}>
+        <TouchableOpacity style={styles.option} onPress={() => signOut()}>
           <View style={styles.optionContainer}>
             <Image source={require('../assets/Up.png')} style={styles.optionImage} />
             <Text style={styles.optionText}>Logout</Text>
@@ -111,7 +109,7 @@ const Extras = () => {
         </View>
       </Modal>
 
-      <Calculator/>
+      
     </SafeAreaView>
   );
 };
@@ -132,8 +130,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionContainer: {
-    width: 170,
-    height: 170,
+    width: 140,
+    height: 140,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#332F36',
@@ -141,12 +139,12 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   optionImage: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     marginBottom: 8,
   },
   optionText: {
-    fontSize: 20,
+    fontSize: 13,
     fontFamily: 'Lexend_Medium',
     textAlign: 'center',
     color: 'white',

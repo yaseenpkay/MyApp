@@ -1,284 +1,103 @@
-import { Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View , SafeAreaView, ImageBackground} from 'react-native'
-import React from 'react';
-import * as Font from 'expo-font';
-import { useFonts } from 'expo-font';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Button,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+/* import { TouchableOpacity } from "react-native-gesture-handler"; */
+import { SafeAreaView } from "react-native-safe-area-context";
 
+const BudgetScreen = () => {
+  const [budgetName, setBudgetName] = useState("");
+  const [budgetAmount, setBudgetAmount] = useState("");
 
+  const handleSaveBudget = () => {
+    // Handle saving the budget data
+    console.log("Budget Name:", budgetName);
+    console.log("Budget Amount:", budgetAmount);
 
-const Signup = () => {
-
-
-    const [loaded] = useFonts({
-        Lexend_ExtraBold: require('../assets/fonts/Lexend-ExtraBold.ttf'),
-        Lexend_SemiBold: require('../assets/fonts/Lexend-SemiBold.ttf'),
-        Lexend_Regular: require('../assets/fonts/Lexend-Regular.ttf'),
-        Lexend_Medium: require('../assets/fonts/Lexend-Medium.ttf'),
-      });
-    
-
-  if (!loaded) {
-    return null;
-  }
+    // Clear the input fields
+    setBudgetName("");
+    setBudgetAmount("");
+  };
 
   return (
-    
-    <View style={{backgroundColor:'#10002B', flex:1 }}>
-
-    <Image style={styles.ellipseTop}
-                source={require('../assets/Ellipse1.png')}/>
-
-      <View style={styles.mainConatiner}>
-      
-            
-      <Text style={{fontFamily:'Lexend_ExtraBold', color: 'white', fontSize:32,marginHorizontal:35,marginVertical:30}}>Create Account</Text>
-        <View style={{flexDirection: 'row',backgroundColor: '#10002B',marginHorizontal:35, borderRadius:7,width:300,height:73 ,padding:13,...styles.elevation
-        }}>
-          
-           
-
-            <Image
-              style={styles.tinyLogo}
-              source={require('../assets/Account_circle.png')}
-            />
-            <Text style={{fontFamily:'Lexend_Medium',color:'#E0AAFF',opacity:0.3,bottom:7,left:10}}>FULL NAME </Text>
-
-            <TextInput
-            style={styles.input}
-            textAlign='left'
-            color = "#E0AAFF"
-            placeholder=""
-            
-            />
-        </View>
-        
-        <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1,top:2}}>
-
-        <Image
-              style={{top:11}}
-              source={require('../assets/email.png')}
-            />
-            <TextInput
-            
-            style={styles.lineInput}
-            textAlign='left'
-            color = "#E0AAFF"
-            placeholderTextColor="#E0AAFF"
-            placeholder="EMAIL"
-            
-
-
-            
-            />
-        </View>
-
-        <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
-
-        <Image
-              style={styles.smallIcons}
-              source={require('../assets/Password.png')}
-            />
-            <TextInput
-            style={styles.lineInput}
-            textAlign='left'
-            color = "#E0AAFF"
-            placeholderTextColor="#E0AAFF"
-            placeholder="PASSWORD"
-            secureTextEntry={true}
-            
-            />
-        </View>
-
-        <View style={{flexDirection: 'row',marginHorizontal:35,padding:9,width:295,height:64,borderColor:'#E0AAFF',borderBottomWidth:1}}>
-
-        <Image
-              style={styles.smallIcons}
-              source={require('../assets/Password.png')}
-            />
-            <TextInput
-            style={styles.lineInput}
-            textAlign='left'
-            color = "#E0AAFF"
-            placeholderTextColor="#E0AAFF"
-            placeholder="CONFIRM PASSWORD"
-            secureTextEntry={true}
-            
-            />
-        </View>
-        
-        <TouchableOpacity>
-       
-          <LinearGradient
-            colors={['#3C096C', '#8445B8', '#C77DFF']}
-            style={styles.signupButton}
-            start={{x:0,y:0}}
-            end={{x:1,y:0}}>
-            <Text style={{fontFamily:'Lexend_Medium',color:"white",fontSize:20,textAlign:"center"}}>SIGNUP</Text>
- 
-          </LinearGradient>
-        </TouchableOpacity>
-          
-        
-
-
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.bigText}>Budget Setting</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.normalText}>Budget Name:</Text>
+        <TextInput
+          style={styles.input}
+          value={budgetName}
+          onChangeText={setBudgetName}
+        />
       </View>
-
-
-      <View style={{ flex: 1 }}>
-      {/* Bottom component */}
-      <View style={styles.bottomComponent}>
-        <Image style={styles.ellipseBottom} source={require('../assets/Ellipse2.png')} />
+      <View style={styles.inputContainer}>
+        <Text style={styles.normalText}>Budget Amount:</Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          value={budgetAmount}
+          onChangeText={setBudgetAmount}
+        />
       </View>
-
-      {/* Top component */}
-      <View style={styles.topComponent}>
-        <Text style={styles.signupText}>
-          Already have an account? <Text style={styles.bottomText}>Sign in</Text>
-        </Text>
-      </View>
-    </View>
-
-      
-      
-      
-      
-
-    </View>
-  )
-}
-
-export default Signup
+      <TouchableOpacity style={styles.button} onPress={handleSaveBudget}>
+        <Image source={require("../assets/addbuttonbig.png")} />
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    /* padding: 20, */
+    /* alignItems: "center",
+    justifyContent: "center", */
+    backgroundColor: "black",
+  },
+  bigText: {
+    color: "#fff",
+    fontSize: 24,
+    fontFamily: "Lexend_SemiBold",
+    marginBottom: 15,
+    marginTop: 10,
+    marginLeft: 30,
+  },
+  inputContainer: {
+    marginBottom: 10,
+  },
 
-    mainConatiner:{
-      flex:1,
-      
-    },
-  
-    input: {
-        width:240,
-        height: 73,
-        borderEndColor:"black",
-        //textAlign:'left',
-        color :"#E0AAFF",
-        opacity:.8,
-        fontSize:24,
-        fontFamily:'Lexend_SemiBold',
-        left:-75,
-        bottom:8,
-        /* borderWidth:3,
-        borderColor:'white', */
-        
-        
-    },
+  normalText: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: "Lexend_Medium",
+    marginLeft: 35,
+  },
+  input: {
+    top: 10,
+    justifyContent: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    width: 300,
+    height: 60,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    left: 30,
+    color: "gray",
+    fontSize: 20,
+    fontFamily: "Lexend_Regular",
+  },
+  button: {
+    marginTop: 5,
+    marginLeft: 30,
+    marginBottom: 10,
+  },
+});
 
-    lineInput:{
-      paddingLeft:10,
-      fontFamily:'Lexend_Medium',
-      opacity:.3,
-      width:295,
-      
-    },
-
-    smallIcons:{
-      top:8,
-      
-    },
-
-    signupButton:{
-      position:'relative',
-      top:47,
-      left:140,
-      height:53,
-      width:156,
-      marginRight: 40,
-      marginLeft: 40,
-      marginTop: 10,
-      padding:9,
-      backgroundColor: '#68a0cf',
-      borderRadius: 50,
-      marginHorizontal:35,
-      
-      
-    },
-
-    tinyLogo: {
-        width: 46,
-        height: 46,
-        alignSelf:'center'
-        //justifyContent:'center'
-      },
-
-        
-      /* card: {
-        backgroundColor: 'white',
-        borderRadius: 8,
-        paddingVertical: 45,
-        paddingHorizontal: 25,
-        width: '80%',
-        marginVertical: 10,
-      }, */
-
-      shadowProp: {
-        shadowColor: '#171717',
-        shadowOffset: {width: -2, height: 4},
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-      },
-
-      elevation: {
-        elevation: 10,
-        shadowColor: 'black',
-        
-        
-
-      },
-      ellipseTop:{
-        marginHorizontal:130,
-      
-
-      },
-
-      ellipseBottom:{
-        //justifyContent:'flex-end',
-        bottom:0,
-        //height:177
-
-      },
-
-      bottomComponent: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        alignItems: 'center',
-      },
-
-      topComponent: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        alignItems: 'center',
-      },
-      signupText: {
-        textAlign: 'center',
-        color: '#E0AAFF',
-        fontSize:16,
-        fontFamily:'Lexend_Regular',
-        bottom:55,
-        opacity:.7
-      },
-      bottomText: {
-        fontWeight: 'bold',
-        color: 'white',
-        opacity:1
-      },
-
-      mainConatiner:{
-        left:25,
-        bottom:1,
-
-      },
-})
-
+export default BudgetScreen;

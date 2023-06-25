@@ -1,18 +1,18 @@
 import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 
-const TransactionCard = ({ item }) => {
+const TransactionCard2 = ({ item }) => {
   console.log(item);
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-        <Image source={require("../assets/Up.png")} style={styles.image} />
+        <Image source={require("../assets/down.png")} style={styles.image} />
       </View>
       <View style={styles.centerSection}>
         <Text style={styles.centertext}>{item.description}</Text>
       </View>
       <View style={styles.rightSection}>
-        <Text style={styles.righttext}>+ {item.amount}</Text>
+        <Text style={styles.righttext}>- {item.amount}</Text>
       </View>
     </View>
   );
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   rightSection: {
     flex: 2,
     alignItems: "flex-end",
-    fontFamily: "Lexend_Regular",
+    fontFamily: "Lexend_SemiBold",
   },
   centertext: {
     fontSize: 16,
@@ -58,10 +58,10 @@ const styles = StyleSheet.create({
     color: "#B891D9",
   },
   righttext: {
-    color: "green",
+    color: "red",
     fontSize: 20,
     fontFamily: "Lexend_SemiBold",
   },
 });
 
-export default TransactionCard;
+export default TransactionCard2;

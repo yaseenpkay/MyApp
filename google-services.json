@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "405530709150",
-    "project_id": "myapp-b0476",
-    "storage_bucket": "myapp-b0476.appspot.com"
+    "project_number": "366647077149",
+    "project_id": "wisewallet-536d5",
+    "storage_bucket": "wisewallet-536d5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:405530709150:android:6597fcf48d91899b863f8f",
+        "mobilesdk_app_id": "1:366647077149:android:4a9f3afd95e83b979659f4",
         "android_client_info": {
-          "package_name": "com.project.myapp"
+          "package_name": "wise.wallet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "405530709150-jqbs8co7s8nhsd0u7t8kqea2qfvqu5ti.apps.googleusercontent.com",
+          "client_id": "366647077149-6227gs4804vnig4rku9qon0m4jekcvt7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBW1-CE9Jw5sGvt5hIyWPr_jzkGXciwFuo"
+          "current_key": "AIzaSyBdmaIsCpnZysYAORP4i1hCswRXTuXhluw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "405530709150-jqbs8co7s8nhsd0u7t8kqea2qfvqu5ti.apps.googleusercontent.com",
+              "client_id": "366647077149-6227gs4804vnig4rku9qon0m4jekcvt7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

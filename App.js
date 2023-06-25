@@ -1,19 +1,37 @@
-import Log from './screens/Log' 
+import {View, Text, StyleSheet} from 'react-native';
+import {useMemo, useState} from 'react';
+import Routes from './Routes';
+import {AuthContext} from './Context';
 
-import Route from './Route'
-import Overview from './screens/Overview' 
-import { NavigationContainer } from '@react-navigation/native';
-
-import AppNavigator from './Route';
-import Signup from './screens/Signup';
-
-import { AuthContext } from './Context';
-
-
-
-export default function App() {
+const App = () => {
+  const [userToken, setUserToken] = useState(null);
+  const authContext = useMemo(() => {
+    return {
+      signIn: () => {
+        setUserToken('asdf');
+      },
+      signUp: () => {
+        setUserToken('asdf');
+      },
+      signOut: () => {
+        setUserToken(null);
+      },
+    };
+  }, []);
   return (
-    <Route/>
-  )
-  ;
-}
+    <AuthContext.Provider value={authContext}>
+      <View style={styles.container}>
+        <Routes userToken={userToken} />
+      </View>
+    </AuthContext.Provider>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+});
+
+export default App;
