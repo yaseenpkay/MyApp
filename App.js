@@ -1,17 +1,17 @@
-import {View, Text, StyleSheet} from 'react-native';
-import {useMemo, useState} from 'react';
-import Routes from './Routes';
-import {AuthContext} from './Context';
+import { View, Text, StyleSheet } from "react-native";
+import { useMemo, useState } from "react";
+import Routes from "./Routes";
+import { AuthContext } from "./Context";
 
 const App = () => {
   const [userToken, setUserToken] = useState(null);
   const authContext = useMemo(() => {
     return {
       signIn: () => {
-        setUserToken('asdf');
+        setUserToken("asdf");
       },
       signUp: () => {
-        setUserToken('asdf');
+        setUserToken("asdf");
       },
       signOut: () => {
         setUserToken(null);
@@ -30,7 +30,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
 });
 

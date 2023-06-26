@@ -8,6 +8,7 @@ const CustomDatePicker = () => {
   const handleDateSelect = (date) => {
     const selectedDateString = date.dateString;
     console.log("Selected Date:", selectedDateString);
+
     setSelectedDate(selectedDateString);
   };
 
