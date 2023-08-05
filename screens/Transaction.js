@@ -6,6 +6,7 @@ import {
   Dimensions,
   ScrollView,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import {
   getFirestore,
   where,
   query,
+  onSnapshot,
 } from "firebase/firestore";
 import app from "../firebaseConfig";
 
@@ -29,6 +31,7 @@ import BudgetCard from "../components/BudgetCard";
 import ExpenseList from "../components/ExpenseList";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Swipeable } from "react-native-gesture-handler"; // Import Swipeable
 
 import { PieChart } from "react-native-chart-kit";
 
@@ -38,7 +41,7 @@ const db = getFirestore(app);
 const Transaction = () => {
   const [budgets, setBudgets] = useState([]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchBudgets = async () => {
       try {
         // Get the budget data from Firestore
@@ -83,6 +86,50 @@ const Transaction = () => {
     };
 
     fetchBudgets();
+  }, []); */
+  const handleDeleteBudget = async (budgetId) => {
+    try {
+      // Delete the budget with the provided ID from Firestore
+      await deleteDoc(doc(db, "budget", budgetId));
+      console.log("Budget deleted successfully:", budgetId);
+    } catch (error) {
+      console.error("Error deleting budget:", error);
+    }
+  };
+  useEffect(() => {
+    const unsubscribeBudgets = onSnapshot(
+      collection(db, "budget"),
+      async (snapshot) => {
+        const updatedBudgets = await Promise.all(
+          snapshot.docs.map(async (doc) => {
+            const budget = doc.data();
+
+            // Calculate total expenses for each budget's category and date range
+            const expensesQuerySnapshot = await getDocs(
+              query(
+                collection(db, "expenses"),
+                where("category", "==", budget.category),
+                where("date", ">=", budget.date)
+              )
+            );
+
+            let totalExpenses = 0;
+            expensesQuerySnapshot.forEach((doc) => {
+              const expense = doc.data();
+              totalExpenses += parseFloat(expense.amount);
+            });
+
+            return { ...budget, totalExpenses };
+          })
+        );
+
+        setBudgets(updatedBudgets);
+      }
+    );
+
+    return () => {
+      unsubscribeBudgets();
+    };
   }, []);
 
   const [loaded] = useFonts({
@@ -111,6 +158,30 @@ const Transaction = () => {
 
         <View>
           <Text style={styles.title}>Budget Tracking</Text>
+          {/* <View style={{ top: 15 }}>
+            <FlatList
+              data={budgets}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <Swipeable
+                  renderRightActions={(progress, dragX) => (
+                    <TouchableOpacity
+                      style={styles.deleteButton}
+                      onPress={() => handleDeleteBudget(item)}
+                    >
+                      <Text style={styles.deleteButtonText}>Delete</Text>
+                    </TouchableOpacity>
+                  )}
+                >
+                  <BudgetCard
+                    budget={item}
+                    totalExpenses={item.totalExpenses || 0}
+                  />
+                </Swipeable>
+              )}
+            />
+          </View> */}
+
           <View style={{ top: 15 }}>
             <FlatList
               data={budgets}
@@ -132,6 +203,19 @@ const Transaction = () => {
 export default Transaction;
 
 const styles = StyleSheet.create({
+  deleteButton: {
+    backgroundColor: "red",
+    width: 75,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  deleteButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: "Lexend_Medium",
+  },
   title: {
     color: "#E0AAFF",
     fontFamily: "Lexend_Medium",

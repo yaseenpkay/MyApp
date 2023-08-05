@@ -20,7 +20,13 @@ import TransactionCard from "../components/TransactionCard";
 import TransactionCard2 from "../components/TransactionCard2";
 
 import app from "../firebaseConfig";
-import { collection, getDocs, addDoc, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  getFirestore,
+  onSnapshot,
+} from "firebase/firestore";
 import { ScrollView } from "react-native-gesture-handler";
 
 //import transactionlist from '../mockdata/transactionlist';
@@ -39,7 +45,7 @@ const Overview = () => {
 
   const [incomeList, setIncomeList] = useState([]);
   const [expenseList, setExpenseList] = useState([]);
-
+  /* 
   useEffect(() => {
     const calculateTotalIncome = async () => {
       try {
@@ -52,6 +58,7 @@ const Overview = () => {
           const amount = data.amount; // Assuming the amount field exists in the documents
           const description = data.description;
           const date = data.date;
+          //const category = data.category;
 
           const incomeObject = {
             amount: Number(amount),
@@ -86,11 +93,13 @@ const Overview = () => {
           const amount = data.amount; // Assuming the amount field exists in the documents
           const description = data.description;
           const date = data.date;
+          const category = data.category;
 
           const expenseObject = {
             amount: Number(amount),
             description: description,
             date: date,
+            category: category,
             // Add other fields from the document as needed
           };
 
@@ -117,7 +126,48 @@ const Overview = () => {
     setBalance(newBalance);
     setExpenses(newExpenses);
     setIncome(newIncome);
-  };
+  }; */
+
+  useEffect(() => {
+    const unsubscribeIncome = onSnapshot(
+      collection(db, "income"),
+      (snapshot) => {
+        const updatedIncome = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setIncomeList(updatedIncome);
+
+        let totalIncome = 0;
+        updatedIncome.forEach((income) => {
+          totalIncome += Number(income.amount);
+        });
+        setTotalIncome(totalIncome);
+      }
+    );
+
+    const unsubscribeExpense = onSnapshot(
+      collection(db, "expenses"),
+      (snapshot) => {
+        const updatedExpenses = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setExpenseList(updatedExpenses);
+
+        let totalExpense = 0;
+        updatedExpenses.forEach((expense) => {
+          totalExpense += Number(expense.amount);
+        });
+        setTotalExpense(totalExpense);
+      }
+    );
+
+    return () => {
+      unsubscribeIncome();
+      unsubscribeExpense();
+    };
+  }, []);
 
   const [loaded] = useFonts({
     Lexend_ExtraBold: require("../assets/fonts/Lexend-ExtraBold.ttf"),

@@ -53,7 +53,17 @@ const styles = StyleSheet.create({
 export default BudgetList;
  */
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Image,
+  Button,
+  TouchableOpacity,
+  Linking,
+  Modal,
+} from "react-native";
 import {
   collection,
   getDocs,
@@ -116,17 +126,7 @@ const BudgetList = () => {
     fetchBudgets();
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={budgets}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <BudgetCard budget={item} totalExpenses={item.totalExpenses || 0} />
-        )}
-      />
-    </View>
-  );
+  return <Text>ihdfbvjdhfbk</Text>;
 };
 
 const styles = StyleSheet.create({
@@ -135,6 +135,41 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 300,
     backgroundColor: "red",
+  },
+  button: {
+    marginTop: 10,
+    marginLeft: 35,
+    marginBottom: 10,
+  },
+
+  buttonText: {
+    color: "gray",
+    fontFamily: "Lexend_Medium",
+    fontSize: 8,
+    alignSelf: "center",
+    textAlign: "center",
+    textAlignVertical: "center",
+    backgroundColor: "#121112",
+    width: 71,
+    height: 30,
+    borderRadius: 15,
+  },
+  categoryContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 8,
+  },
+  row: {
+    flexDirection: "row",
+    marginLeft: 30,
+    marginRight: 22,
+  },
+  column: {
+    flex: 1,
+    height: 30, // Adjust the height as needed
+    backgroundColor: "black",
+    margin: 4, // Adjust the margin as needed
   },
 });
 

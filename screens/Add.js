@@ -42,9 +42,14 @@ const Add = ({ updateOverview }) => {
   const [incomeDescription, setIncomeDescription] = useState("");
 
   const [expenseCategory, setExpenseCategory] = useState("");
+  const [incomeCategory, setIncomeCategory] = useState("");
 
   const handlePress = (value) => {
     setExpenseCategory(value);
+  };
+
+  const handlePressi = (value) => {
+    setIncomeCategory(value);
   };
 
   const redirectToWebsite = async () => {
@@ -131,7 +136,7 @@ const Add = ({ updateOverview }) => {
   };
 
   const writeIncome = async () => {
-    if (!incomeAmount || !incomeDescription || !incomedate) {
+    if (!incomeAmount || !incomeDescription || !incomedate || !incomeCategory) {
       setErrorMessage("Please enter both amount and description");
       return;
     }
@@ -156,6 +161,7 @@ const Add = ({ updateOverview }) => {
         amount: incomeAmount,
         description: incomeDescription,
         date: incomedate,
+        category: incomeCategory,
       });
       console.log("Document written with ID: ", docRef.id);
 
@@ -163,6 +169,7 @@ const Add = ({ updateOverview }) => {
       setIncomeAmount("");
       setIncomeDescription("");
       setIncomeDate("");
+      setIncomeCategory("");
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -324,6 +331,55 @@ const Add = ({ updateOverview }) => {
             onChangeText={setIncomeDescription}
           />
           {/* <Text style={styles.normalText}>Category</Text> */}
+
+          <TextInput
+            style={styles.input}
+            value={incomeCategory}
+            placeholderTextColor={"#121112"}
+            onChangeText={setIncomeCategory}
+            placeholder="Choose Category"
+          />
+
+          <View style={styles.categoryContainer}>
+            <View style={styles.row}>
+              <View style={styles.column}>
+                <TouchableOpacity
+                  style={styles.touchableOpacity}
+                  onPress={() => handlePressi("Salary")}
+                >
+                  <Text style={styles.buttonText}>Salary</Text>
+                </TouchableOpacity>
+                {/* Content for first column of first row */}
+              </View>
+              <View style={styles.column}>
+                <TouchableOpacity
+                  style={styles.touchableOpacity}
+                  onPress={() => handlePressi("Gift")}
+                >
+                  <Text style={styles.buttonText}>Gift</Text>
+                </TouchableOpacity>
+                {/* Content for second column of first row */}
+              </View>
+              <View style={styles.column}>
+                <TouchableOpacity
+                  style={styles.touchableOpacity}
+                  onPress={() => handlePressi("Business")}
+                >
+                  <Text style={styles.buttonText}>Business</Text>
+                </TouchableOpacity>
+                {/* Content for third column of first row */}
+              </View>
+              <View style={styles.column}>
+                <TouchableOpacity
+                  style={styles.touchableOpacity}
+                  onPress={() => handlePressi("Other")}
+                >
+                  <Text style={styles.buttonText}>Other</Text>
+                </TouchableOpacity>
+                {/* Content for fourth column of first row */}
+              </View>
+            </View>
+          </View>
 
           <TextInput
             style={styles.input}

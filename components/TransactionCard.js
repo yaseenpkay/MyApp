@@ -3,10 +3,22 @@ import { View, Image, Text, StyleSheet } from "react-native";
 
 const TransactionCard = ({ item }) => {
   console.log(item);
+  const categoryIcons = {
+    Salary: require("../assets/Salary.png"),
+    Business: require("../assets/Business.png"),
+    Gift: require("../assets/Gift.png"),
+    Other: require("../assets/More.png"),
+  };
+
+  const defaultImage = require("../assets/Up.png");
+  console.log("Item category:", item.category);
+
+  const categoryImage = categoryIcons[item.category] || defaultImage;
+
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-        <Image source={require("../assets/Up.png")} style={styles.image} />
+        <Image source={categoryImage} style={styles.image} />
       </View>
       <View style={styles.centerSection}>
         <Text style={styles.centertext}>{item.description}</Text>
@@ -38,8 +50,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     right: 10,
     resizeMode: "contain",
   },

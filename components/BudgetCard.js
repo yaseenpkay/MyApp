@@ -1,5 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { RectButton } from "react-native-gesture-handler"; // Import RectButton
 
 const BudgetCard = ({ budget, totalExpenses }) => {
   const percentage = (totalExpenses / budget.amount) * 100;
@@ -14,12 +15,32 @@ const BudgetCard = ({ budget, totalExpenses }) => {
     message += "  You have exceeded the budget!";
     textColor = "#FF0000"; // Red color
   } else if (percentage >= 70) {
-    message += "  You have exceeded the budget!";
+    message += "  You are near to reaching the limit! Spend wisely";
     textColor = "#FF3D00"; // Red color
   } else {
     message += "  You are near to reaching the limit! Spend wisely ";
     textColor = "#FFFF00"; // Yellow color
   }
+  const handlePress = () => {
+    console.log("Close button pressed for budget:", budget.name);
+    // You can add additional actions or logic here if needed
+  };
+
+  const categoryIcons = {
+    Food: require("../assets/Pizza.png"),
+    Transportation: require("../assets/Sedan.png"),
+    Shopping: require("../assets/ShoppingBag.png"),
+    Groceries: require("../assets/Buying.png"),
+    Entertainment: require("../assets/VideoCamera.png"),
+    Bills: require("../assets/Invoice.png"),
+    Fuel: require("../assets/GasStation.png"),
+    Other: require("../assets/More.png"),
+  };
+
+  const defaultImage = require("../assets/down.png");
+  console.log("Item category:", budget.category);
+
+  const categoryImage = categoryIcons[budget.category] || defaultImage;
 
   const categoryColors = {
     Food: "#f94144",
@@ -70,6 +91,7 @@ const BudgetCard = ({ budget, totalExpenses }) => {
         <View style={styles.progressBarContainer}>
           <View
             style={{
+              maxWidth: 300,
               width: (totalExpenses / budget.amount) * 300, // Adjust width as needed
               height: 10,
               borderRadius: 15,
@@ -99,6 +121,13 @@ const styles = StyleSheet.create({
     bottom: 2,
     top: 1,
     marginLeft: 15,
+  },
+  closeButtonContainer: {
+    position: "absolute",
+    top: -1, // Adjust this value
+    right: -1, // Adjust this value
+    width: 35,
+    height: 35,
   },
   budgetContainer: {
     flex: 1,
@@ -144,5 +173,23 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     textAlign: "center",
     flex: 1,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    backgroundColor: "red",
+    borderRadius: 15,
+    width: 35,
+    height: 35,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 26,
+    fontFamily: "Lexend_SemiBold",
+    bottom: 2,
+    //backgroundColor: "",
   },
 });

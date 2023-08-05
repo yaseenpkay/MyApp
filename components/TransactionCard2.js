@@ -7,17 +7,18 @@ const TransactionCard2 = ({ item }) => {
   const categoryIcons = {
     Food: require("../assets/Pizza.png"),
     Transportation: require("../assets/Sedan.png"),
-    Shopping: require("../assets/Shopping Bag.png"),
+    Shopping: require("../assets/ShoppingBag.png"),
     Groceries: require("../assets/Buying.png"),
-    Entertainment: require("../assets/Video Camera.png"),
+    Entertainment: require("../assets/VideoCamera.png"),
     Bills: require("../assets/Invoice.png"),
-    Fuel: require("../assets/Gas Station.png"),
+    Fuel: require("../assets/GasStation.png"),
     Other: require("../assets/More.png"),
-
-    // Add more category-image associations as needed
   };
 
-  const categoryImage = categoryIcons[item.category];
+  const defaultImage = require("../assets/down.png");
+  console.log("Item category:", item.category);
+
+  const categoryImage = categoryIcons[item.category] || defaultImage;
 
   return (
     <View style={styles.container}>
@@ -54,8 +55,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     right: 10,
     resizeMode: "contain",
   },

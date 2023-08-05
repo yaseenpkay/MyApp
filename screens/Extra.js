@@ -9,94 +9,103 @@ import {
   Button,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Calculator } from "react-native-calculator";
 import { AuthContext } from "../Context";
 import { useContext } from "react";
-import ExpensePieChart from "../components/ExpensePieChart";
+import { useNavigation } from "@react-navigation/native";
 
 const Extras = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const navigation = useNavigation();
 
   const { signOut } = useContext(AuthContext);
 
-  const handleOptionPress = (option) => {
+  /* const handleOptionPress = (option) => {
     setSelectedOption(option);
     setModalOpen(true);
-  };
+  }; */
 
-  const closeModal = () => {
+  /*  const closeModal = () => {
     setModalOpen(false);
-  };
+  }; */
 
-  const renderOptionContent = () => {
-    switch (selectedOption) {
+  /* const handleOptionPress = (option) => {
+    setSelectedOption(option); */
+
+  /* switch (option) {
       case "budget-setting":
-        return (
-          <View>
-            <Text>Budget Setting Option Selected</Text>
-            {/* Add budget setting functionality here */}
-          </View>
-        );
-      case "report-generation":
-        return (
-          <View>
-            <Text>Report Generation Option Selected</Text>
-            {/* Add report generation functionality here */}
-          </View>
-        );
-      case "Calculator":
-        return (
-          <View>
-            <Text>Calculator Option Selected</Text>
-            <Calculator style={{ width: 100, height: 200 }} />
-          </View>
-        );
-      case "currency-conversion":
-        return (
-          <View>
-            <Text>Currency Conversion Option Selected</Text>
-            {/* Add currency conversion functionality here */}
-          </View>
-        );
-
+        navigation.navigate("BudgetSetting"); // Replace 'BudgetSetting' with the actual screen name
+        break;
+      case 'report-generation':
+        navigation.navigate('ReportGeneration'); // Replace 'ReportGeneration' with the actual screen name
+        break;
+      case 'calculator':
+        navigation.navigate('Calculator'); // Replace 'Calculator' with the actual screen name
+        break;
+      case 'currency-conversion':
+        navigation.navigate('CurrencyConversion'); // Replace 'CurrencyConversion' with the actual screen name
+        break;
       default:
-        return null;
+        break;
     }
-  };
+  }; */
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.row}>
-        {/* <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('budget-setting')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigation.navigate("BudgetSetting")}
+        >
           <View style={styles.optionContainer}>
-            <Image source={require('../assets/Up.png')} style={styles.optionImage} />
+            <Image
+              source={require("../assets/Up.png")}
+              style={styles.optionImage}
+            />
             <Text style={styles.optionText}>Budget Setting</Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
-        {/* <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('report-generation')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigation.navigate("BudgetSetting")}
+        >
           <View style={styles.optionContainer}>
-            <Image source={require('../assets/Up.png')} style={styles.optionImage} />
+            <Image
+              source={require("../assets/Up.png")}
+              style={styles.optionImage}
+            />
             <Text style={styles.optionText}>Report Generation</Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       <View style={styles.row}>
-        {/*  <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('calculator')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigation.navigate("Calculator")}
+        >
           <View style={styles.optionContainer}>
-            <Image source={require('../assets/Up.png')} style={styles.optionImage} />
+            <Image
+              source={require("../assets/Up.png")}
+              style={styles.optionImage}
+            />
             <Text style={styles.optionText}>Calculator</Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
-        {/* <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('currency-conversion')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigation.navigate("CurrencyConverter")}
+        >
           <View style={styles.optionContainer}>
-            <Image source={require('../assets/Up.png')} style={styles.optionImage} />
+            <Image
+              source={require("../assets/Up.png")}
+              style={styles.optionImage}
+            />
             <Text style={styles.optionText}>Currency Conversion</Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       <View style={styles.row}>
@@ -111,7 +120,7 @@ const Extras = () => {
         </TouchableOpacity>
       </View>
 
-      <Modal visible={isModalOpen} animationType="slide" transparent={true}>
+      {/* <Modal visible={isModalOpen} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
@@ -120,7 +129,7 @@ const Extras = () => {
             <Button title="Close" onPress={closeModal} />
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </SafeAreaView>
   );
 };
@@ -165,16 +174,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    height: "80%",
-    width: "80%",
+    height: 300,
+    width: 300,
   },
   modalContent: {
     backgroundColor: "white",
     padding: 16,
     borderRadius: 10,
     alignItems: "center",
-    width: "80%",
-    maxHeight: "80%",
+    width: 300,
+    height: 300,
   },
   modalText: {
     fontSize: 20,
