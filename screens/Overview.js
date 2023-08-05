@@ -217,29 +217,28 @@ const Overview = () => {
               </View>
             </View>
           </View>
-
-          <Text
-            style={{
-              color: "#E0AAFF",
-              fontFamily: "Lexend_Medium",
-              fontSize: 20,
-              bottom: 20,
-              right: 50,
-            }}
-          >
-            Recent Transactions
-          </Text>
         </View>
+        <Text
+          style={{
+            color: "#E0AAFF",
+            fontFamily: "Lexend_Medium",
+            fontSize: 20,
+            bottom: 20,
+            left: 30,
+          }}
+        >
+          Recent Transactions
+        </Text>
         <View style={styles.list}>
           {/* <Button onPress={readData} title="read data" /> */}
           <FlatList
-            data={incomeList}
-            renderItem={({ item }) => <TransactionCard item={item} />}
+            data={expenseList}
+            renderItem={({ item }) => <TransactionCard2 item={item} />}
             keyExtractor={(item) => item.id}
           />
           <FlatList
-            data={expenseList}
-            renderItem={({ item }) => <TransactionCard2 item={item} />}
+            data={incomeList}
+            renderItem={({ item }) => <TransactionCard item={item} />}
             keyExtractor={(item) => item.id}
           />
         </View>

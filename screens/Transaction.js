@@ -8,20 +8,83 @@ import {
   FlatList,
 } from "react-native";
 import React from "react";
-//import { useState } from 'react';
+import { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  where,
+  query,
+} from "firebase/firestore";
+import app from "../firebaseConfig";
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import TransactionCard from "../components/TransactionCard";
+
 import CalendarView from "../components/CalendarView";
-import BarChartComponent from "../components/BarChartComponent";
+import BudgetCard from "../components/BudgetCard";
+import ExpenseList from "../components/ExpenseList";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { PieChart } from "react-native-chart-kit";
+
+const screenWidth = Dimensions.get("window").width;
+const db = getFirestore(app);
+
 const Transaction = () => {
+  const [budgets, setBudgets] = useState([]);
+
+  useEffect(() => {
+    const fetchBudgets = async () => {
+      try {
+        // Get the budget data from Firestore
+        const budgetQuerySnapshot = await getDocs(collection(db, "budget"));
+
+        // Map the documents to an array of budget objects
+        const fetchedBudgets = budgetQuerySnapshot.docs.map((doc) =>
+          doc.data()
+        );
+
+        // Calculate total expenses for each budget's category and date range
+        const budgetsWithTotalExpenses = await Promise.all(
+          fetchedBudgets.map(async (budget) => {
+            console.log("Fetching expenses for category:", budget.category);
+            console.log("Budget date:", budget.date);
+
+            const expensesQuerySnapshot = await getDocs(
+              query(
+                collection(db, "expenses"),
+                where("category", "==", budget.category),
+                where("date", ">=", budget.date)
+              )
+            );
+
+            let totalExpenses = 0;
+            expensesQuerySnapshot.forEach((doc) => {
+              const expense = doc.data();
+              totalExpenses += parseFloat(expense.amount); // Convert to number
+            });
+
+            console.log("Total Expenses:", totalExpenses);
+
+            return { ...budget, totalExpenses };
+          })
+        );
+
+        // Set the fetched budgets with total expenses in state
+        setBudgets(budgetsWithTotalExpenses);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchBudgets();
+  }, []);
+
   const [loaded] = useFonts({
     Lexend_ExtraBold: require("../assets/fonts/Lexend-ExtraBold.ttf"),
     Lexend_SemiBold: require("../assets/fonts/Lexend-SemiBold.ttf"),
@@ -40,9 +103,27 @@ const Transaction = () => {
 
         <CalendarView />
 
-        <Text style={styles.title}>Expense Chart</Text>
+        <Text style={styles.title}>Expense Analytics</Text>
 
-        <BarChartComponent />
+        <View style={{ alignSelf: "center" }}>
+          <ExpenseList />
+        </View>
+
+        <View>
+          <Text style={styles.title}>Budget Tracking</Text>
+          <View style={{ top: 15 }}>
+            <FlatList
+              data={budgets}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <BudgetCard
+                  budget={item}
+                  totalExpenses={item.totalExpenses || 0}
+                />
+              )}
+            />
+          </View>
+        </View>
       </SafeAreaView>
     </ScrollView>
   );

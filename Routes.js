@@ -42,8 +42,7 @@ const TabsScreen = () => (
     <Tabs.Screen name="Add" component={Add} />
     <Tabs.Screen name="People" component={People} />
     <Tabs.Screen name="Extra" component={Extra} />
-    <Tabs.Screen name="Test" component={Test} />
-    <Tabs.Screen name="Testt" component={Testt} />
+    <Tabs.Screen name="test" component={Test} />
   </Tabs.Navigator>
 );
 

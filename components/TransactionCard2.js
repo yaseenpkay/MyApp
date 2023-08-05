@@ -3,10 +3,26 @@ import { View, Image, Text, StyleSheet } from "react-native";
 
 const TransactionCard2 = ({ item }) => {
   console.log(item);
+
+  const categoryIcons = {
+    Food: require("../assets/Pizza.png"),
+    Transportation: require("../assets/Sedan.png"),
+    Shopping: require("../assets/Shopping Bag.png"),
+    Groceries: require("../assets/Buying.png"),
+    Entertainment: require("../assets/Video Camera.png"),
+    Bills: require("../assets/Invoice.png"),
+    Fuel: require("../assets/Gas Station.png"),
+    Other: require("../assets/More.png"),
+
+    // Add more category-image associations as needed
+  };
+
+  const categoryImage = categoryIcons[item.category];
+
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-        <Image source={require("../assets/down.png")} style={styles.image} />
+        <Image source={categoryImage} style={styles.image} />
       </View>
       <View style={styles.centerSection}>
         <Text style={styles.centertext}>{item.description}</Text>

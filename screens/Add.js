@@ -6,14 +6,18 @@ import {
   Image,
   Button,
   TouchableOpacity,
+  Linking,
+  Modal,
 } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { collection, addDoc, getFirestore } from "firebase/firestore";
-import CustomDatePicker from "../components/CustomDatePicker";
 import app from "../firebaseConfig";
 import { ScrollView } from "react-native-gesture-handler";
+import CustomDatePicker from "../components/CustomDatePicker";
+
+//import { Linking } from "expo";
 
 const Add = ({ updateOverview }) => {
   // const [income, setIncome] = useState(0);
@@ -25,6 +29,12 @@ const Add = ({ updateOverview }) => {
   /* const [expenseCategory, setExpenseCategory] = useState("");
   const [incomeCategory, setIncomeCategory] = useState(""); */
 
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+
+  const toggleDatePicker = () => {
+    setDatePickerVisible(!isDatePickerVisible);
+  };
+
   const [expenseAmount, setExpenseAmount] = useState("");
   const [expenseDescription, setExpenseDescription] = useState("");
 
@@ -35,6 +45,34 @@ const Add = ({ updateOverview }) => {
 
   const handlePress = (value) => {
     setExpenseCategory(value);
+  };
+
+  const redirectToWebsite = async () => {
+    const url = "https://pay.google.com/about/"; // Replace with your desired website URL
+
+    // Check if the device supports deep linking
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // Open the website URL
+      await Linking.openURL(url);
+    } else {
+      console.log("Don't know how to open URI: " + url);
+    }
+  };
+
+  const redirectToApp = async () => {
+    const appPackageName = "com.phonepe.app";
+
+    // Check if the other app is installed on the device
+    const isAppInstalled = await Linking.canOpenURL(appPackageName);
+
+    if (isAppInstalled) {
+      // Open the other app
+      await Linking.openURL(appPackageName);
+    } else {
+      console.log("The other app is not installed.");
+    }
   };
 
   const [expensedate, setExpenseDate] = useState("");
@@ -55,6 +93,21 @@ const Add = ({ updateOverview }) => {
       !expenseCategory
     ) {
       setErrorMessage("Please enter both amount and description");
+      return;
+    }
+
+    const todayTimestamp = Date.now();
+    const expenseDateObj = new Date(expensedate);
+
+    if (isNaN(expenseDateObj)) {
+      setErrorMessage("Invalid date format");
+      return;
+    }
+
+    const expenseDateTimestamp = expenseDateObj.getTime();
+
+    if (expenseDateTimestamp > todayTimestamp) {
+      setErrorMessage("Expense date cannot be in the future");
       return;
     }
 
@@ -83,11 +136,25 @@ const Add = ({ updateOverview }) => {
       return;
     }
 
+    const todayTimestamp = Date.now();
+    const incomeDateObj = new Date(incomedate);
+
+    if (isNaN(incomeDateObj)) {
+      setErrorMessage("Invalid date format");
+      return;
+    }
+
+    const incomeDateTimestamp = incomeDateObj.getTime();
+
+    if (incomeDateTimestamp > todayTimestamp) {
+      setErrorMessage("Income date cannot be in the future");
+      return;
+    }
+
     try {
       const docRef = await addDoc(collection(db, "income"), {
         amount: incomeAmount,
         description: incomeDescription,
-        //category: incomeCategory,
         date: incomedate,
       });
       console.log("Document written with ID: ", docRef.id);
@@ -219,7 +286,11 @@ const Add = ({ updateOverview }) => {
             placeholderTextColor={"#121112"}
             value={expensedate}
             onChangeText={setExpenseDate}
-          />
+            /* onFocus={toggleDatePicker} */
+          >
+            {/* {selectedDate}
+            {expensedate && <Text>{expensedate}</Text>} */}
+          </TextInput>
 
           <TouchableOpacity
             style={styles.button}
@@ -228,12 +299,11 @@ const Add = ({ updateOverview }) => {
             <Image source={require("../assets/addbuttonbig.png")} />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => writeExpense()}
-          >
+          <TouchableOpacity style={styles.button} onPress={redirectToWebsite}>
             <Image source={require("../assets/paybtn.png")} />
           </TouchableOpacity>
+
+          {/* <Button title="Go to Other App" onPress={redirectToWebsite} /> */}
         </View>
 
         <View styles={styles.functionBox}>
@@ -287,6 +357,28 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
 
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "black",
+    padding: 20,
+    borderRadius: 10,
+    width: 330,
+    height: "80%",
+  },
+  closeButton: {
+    alignSelf: "flex-end",
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#E0AAFF",
+    fontFamily: "Lexend_ExtraBold",
+  },
+
   /* functionBox: {
     flex: 1,
     backgroundColor: "white",
@@ -316,39 +408,12 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend_Regular",
   },
 
-  /* picker: {
-    justifyContent: "center",
-    width: 300,
-    height: 60,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    left: 40,
-    color: "gray",
-    fontSize: 20,
-    fontFamily: "Lexend_Regular",
-  },
-
-  pickerItem: {
-    color: "red",
-    fontSize: 16,
-    fontWeight: "bold",
-    backgroundColor: "black",
-  }, */
-
   button: {
     marginTop: 10,
-    marginLeft: 30,
+    marginLeft: 35,
     marginBottom: 10,
   },
-  /* pickerlist: {
-    backgroundColor: "lightgray",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "gray",
-    width: 200,
-    height: 40,
-  },
- */
+
   buttonText: {
     color: "gray",
     fontFamily: "Lexend_Medium",
