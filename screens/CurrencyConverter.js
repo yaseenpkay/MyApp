@@ -2,110 +2,190 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const supportedCurrencies = ["USD", "EUR", "GBP", "JPY", "INR"];
+
+const fixedExchangeRates = {
+  USD: 1,
+  EUR: 0.85,
+  GBP: 0.72,
+  JPY: 110.85,
+  INR: 74.72,
+};
 
 const CurrencyConverter = () => {
-  const [amount, setAmount] = useState("");
-  const [fromCurrency, setFromCurrency] = useState("USD");
-  const [toCurrency, setToCurrency] = useState("EUR");
-  const [convertedAmount, setConvertedAmount] = useState("");
-  const [exchangeRates, setExchangeRates] = useState({});
+  const [input, setInput] = useState("0");
+  const [from, setFrom] = useState("USD");
+  const [to, setTo] = useState("INR");
+  const [output, setOutput] = useState("0");
 
   useEffect(() => {
-    fetchExchangeRates();
-  }, []);
+    convert();
+  }, [input, to, from]);
 
-  const fetchExchangeRates = async () => {
-    try {
-      const response = await fetch("https://api.exchangeratesapi.io/latest");
-      const data = await response.json();
-      setExchangeRates(data.rates);
-    } catch (error) {
-      console.error("Error fetching exchange rates:", error);
-    }
-  };
-
-  const handleConvert = () => {
-    if (amount && exchangeRates[fromCurrency] && exchangeRates[toCurrency]) {
-      const convertedValue =
-        (parseFloat(amount) / exchangeRates[fromCurrency]) *
-        exchangeRates[toCurrency];
-      setConvertedAmount(convertedValue.toFixed(2));
-    }
-  };
+  function convert() {
+    const rate = fixedExchangeRates[to] / fixedExchangeRates[from];
+    setOutput((parseFloat(input) * rate).toFixed(2) || "0.00");
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Currency Converter</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.bigText}>Currency Converter</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter amount"
+        value={input}
+        onChangeText={(text) => setInput(text)}
         keyboardType="numeric"
-        value={amount}
-        onChangeText={(text) => setAmount(text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="From Currency"
-        value={fromCurrency}
-        onChangeText={(text) => setFromCurrency(text.toUpperCase())}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="To Currency"
-        value={toCurrency}
-        onChangeText={(text) => setToCurrency(text.toUpperCase())}
-      />
-      <TouchableOpacity style={styles.convertButton} onPress={handleConvert}>
-        <Text style={styles.buttonText}>Convert</Text>
-      </TouchableOpacity>
-      {convertedAmount !== "" && (
-        <Text style={styles.result}>
-          Converted Amount: {convertedAmount} {toCurrency}
-        </Text>
-      )}
-    </View>
+      <Text style={styles.normalText}>From:</Text>
+      <View style={styles.row}>
+        {supportedCurrencies.map((currency) => (
+          <TouchableOpacity
+            key={currency}
+            style={[
+              styles.currencyButton,
+              { backgroundColor: from === currency ? "#007BFF" : "white" },
+            ]}
+            onPress={() => setFrom(currency)}
+          >
+            <Text
+              style={[
+                styles.currencyText,
+                { color: from === currency ? "white" : "black" },
+              ]}
+            >
+              {currency}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <Text style={styles.normalText}>To:</Text>
+      <View style={styles.row}>
+        {supportedCurrencies.map((currency) => (
+          <TouchableOpacity
+            key={currency}
+            style={[
+              styles.currencyButton,
+              { backgroundColor: to === currency ? "#007BFF" : "white" },
+            ]}
+            onPress={() => setTo(currency)}
+          >
+            <Text
+              style={[
+                styles.currencyText,
+                { color: to === currency ? "white" : "black" },
+              ]}
+            >
+              {currency}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <Text style={styles.input}>
+        Converted Amount: {output} {to}
+      </Text>
+      {/* <TouchableOpacity style={styles.convertButton} onPress={convert}>
+        <Text style={styles.convertButtonText}>Convert</Text>
+      </TouchableOpacity> */}
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "black",
+    padding: 16,
   },
-  title: {
+  normalText: {
+    color: "white",
+    fontSize: 18,
+    fontFamily: "Lexend_Medium",
+    marginLeft: 10,
+  },
+  bigText: {
+    color: "#fff",
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+    fontFamily: "Lexend_SemiBold",
+    marginBottom: 15,
+    marginLeft: 10,
   },
   input: {
-    width: 200,
-    height: 40,
+    top: 10,
+    justifyContent: "center",
+    borderColor: "gray",
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
+    width: 300,
+    height: 60,
+    borderRadius: 10,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 15,
+    marginLeft: 10,
+    color: "gray",
+    fontSize: 20,
+    fontFamily: "Lexend_Regular",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    top: 10,
+    right: 6,
+  },
+  label: {
+    marginRight: 8,
+    color: "white",
+  },
+  currencyButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 10.5,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginHorizontal: 4,
+    fontFamily: "Lexend_Regular",
+    backgroundColor: "orange", // Change the button color here
+  },
+  currencyText: {
+    fontSize: 15,
+    fontFamily: "Lexend_Medium",
+  },
+  convertedAmount: {
+    top: 10,
+    justifyContent: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    width: 300,
+    height: 60,
+    borderRadius: 10,
+    paddingHorizontal: 9,
+    marginBottom: 15,
+    left: 30,
+    color: "gray",
+    fontSize: 20,
+    fontFamily: "Lexend_Regular",
   },
   convertButton: {
-    backgroundColor: "blue",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginBottom: 10,
+    marginTop: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 1,
+
+    backgroundColor: "#332F36", // Change the button color here
+    borderRadius: 8,
+    width: 300,
+    left: 10,
   },
-  buttonText: {
+  convertButtonText: {
     color: "white",
-    fontWeight: "bold",
-  },
-  result: {
-    fontSize: 18,
-    marginTop: 20,
+    fontSize: 20,
+    fontFamily: "Lexend_Regular",
+    textAlign: "center",
   },
 });
 

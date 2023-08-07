@@ -18,6 +18,8 @@ import {
   where,
   query,
   onSnapshot,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 import app from "../firebaseConfig";
 
@@ -38,64 +40,30 @@ import { PieChart } from "react-native-chart-kit";
 const screenWidth = Dimensions.get("window").width;
 const db = getFirestore(app);
 
-const Transaction = () => {
+const Transaction = (budget) => {
   const [budgets, setBudgets] = useState([]);
 
-  /* useEffect(() => {
-    const fetchBudgets = async () => {
-      try {
-        // Get the budget data from Firestore
-        const budgetQuerySnapshot = await getDocs(collection(db, "budget"));
+  console.log("transaction budget id", budget.id);
 
-        // Map the documents to an array of budget objects
-        const fetchedBudgets = budgetQuerySnapshot.docs.map((doc) =>
-          doc.data()
-        );
+  const deleteBudget = async (budgetId) => {
+    console.log("Deleting budget with ID:", budgetId);
 
-        // Calculate total expenses for each budget's category and date range
-        const budgetsWithTotalExpenses = await Promise.all(
-          fetchedBudgets.map(async (budget) => {
-            console.log("Fetching expenses for category:", budget.category);
-            console.log("Budget date:", budget.date);
-
-            const expensesQuerySnapshot = await getDocs(
-              query(
-                collection(db, "expenses"),
-                where("category", "==", budget.category),
-                where("date", ">=", budget.date)
-              )
-            );
-
-            let totalExpenses = 0;
-            expensesQuerySnapshot.forEach((doc) => {
-              const expense = doc.data();
-              totalExpenses += parseFloat(expense.amount); // Convert to number
-            });
-
-            console.log("Total Expenses:", totalExpenses);
-
-            return { ...budget, totalExpenses };
-          })
-        );
-
-        // Set the fetched budgets with total expenses in state
-        setBudgets(budgetsWithTotalExpenses);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchBudgets();
-  }, []); */
-  const handleDeleteBudget = async (budgetId) => {
     try {
-      // Delete the budget with the provided ID from Firestore
+      // Delete the budget from the database
+      console.log("Attempting to delete budget from database...");
       await deleteDoc(doc(db, "budget", budgetId));
-      console.log("Budget deleted successfully:", budgetId);
+      console.log("Budget deleted from the database");
+
+      // Remove the deleted budget from the state
+      setBudgets((prevBudgets) =>
+        prevBudgets.filter((budget) => budget.id !== budgetId)
+      );
+      console.log("Budget removed from state");
     } catch (error) {
       console.error("Error deleting budget:", error);
     }
   };
+
   useEffect(() => {
     const unsubscribeBudgets = onSnapshot(
       collection(db, "budget"),
@@ -103,6 +71,7 @@ const Transaction = () => {
         const updatedBudgets = await Promise.all(
           snapshot.docs.map(async (doc) => {
             const budget = doc.data();
+            budget.id = doc.id; // Set the id field to the document ID
 
             // Calculate total expenses for each budget's category and date range
             const expensesQuerySnapshot = await getDocs(
@@ -189,6 +158,7 @@ const Transaction = () => {
               renderItem={({ item }) => (
                 <BudgetCard
                   budget={item}
+                  onDeleteBudget={() => deleteBudget(budget.id)} // Pass an inline arrow function here
                   totalExpenses={item.totalExpenses || 0}
                 />
               )}

@@ -53,72 +53,79 @@ const Extras = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.row}>
-        <TouchableOpacity
+        <TouchableOpacity style={styles.option} onPress={() => signOut()}>
+          <View style={styles.optionContainer}>
+            <Image
+              source={require("../assets/Logout.png")}
+              style={styles.optionImage}
+            />
+            <Text style={styles.optionText}>Logout</Text>
+          </View>
+        </TouchableOpacity>
+
+        {/* <TouchableOpacity
           style={styles.option}
           onPress={() => navigation.navigate("BudgetSetting")}
         >
           <View style={styles.optionContainer}>
             <Image
-              source={require("../assets/Accounting.png")}
+              source={require("../assets/Up.png")}
               style={styles.optionImage}
             />
-            <Text style={styles.optionText}>Budget Setting</Text>
+            <Text style={styles.optionText}>Report Generation</Text>
           </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.option}
-          onPress={() => navigation.navigate("TaxCalculator")}
-        >
-          <View style={styles.optionContainer}>
-            <Image
-              source={require("../assets/Tax.png")}
-              style={styles.optionImage}
-            />
-            <Text style={styles.optionText}>Tax Calculator</Text>
-          </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.row}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.option}
           onPress={() => navigation.navigate("Calculator")}
         >
           <View style={styles.optionContainer}>
             <Image
-              source={require("../assets/Calculator.png")}
+              source={require("../assets/Up.png")}
               style={styles.optionImage}
             />
             <Text style={styles.optionText}>Calculator</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <TouchableOpacity
-          style={styles.option}
-          onPress={() => navigation.navigate("CurrencyConverter")}
-        >
-          <View style={styles.optionContainer}>
-            <Image
-              source={require("../assets/Exchange.png")}
-              style={styles.optionImage}
-            />
-            <Text style={styles.optionText}>Currency Conversion</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.row}>
         {/* <TouchableOpacity
           style={styles.option}
           onPress={() => navigation.navigate("CurrencyConverter")}
         >
           <View style={styles.optionContainer}>
             <Image
-              source={require("../assets/Exchange.png")}
+              source={require("../assets/Up.png")}
               style={styles.optionImage}
             />
             <Text style={styles.optionText}>Currency Conversion</Text>
+          </View>
+        </TouchableOpacity> */}
+      </View>
+
+      <View style={styles.row}>
+        {/* <TouchableOpacity style={styles.option} onPress={() => signOut()}>
+          <View style={styles.optionContainer}>
+            <Image
+              source={require("../assets/Up.png")}
+              style={styles.optionImage}
+            />
+            <Text style={styles.optionText}>Logout</Text>
+          </View>
+        </TouchableOpacity> */}
+
+        {/*  <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigation.navigate("TaxCalculator")}
+        >
+          <View style={styles.optionContainer}>
+            <Image
+              source={require("../assets/Up.png")}
+              style={styles.optionImage}
+            />
+            <Text style={styles.optionText}>Tax Calculator</Text>
           </View>
         </TouchableOpacity> */}
       </View>

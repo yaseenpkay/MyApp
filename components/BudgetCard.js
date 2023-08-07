@@ -1,8 +1,56 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { RectButton } from "react-native-gesture-handler"; // Import RectButton
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import app from "../firebaseConfig";
+import { onSnapshot, collection, query, where } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
-const BudgetCard = ({ budget, totalExpenses }) => {
+const db = getFirestore(app);
+
+const BudgetCard = ({ budget, onDeleteBudget }) => {
+  const [totalExpenses, setTotalExpenses] = useState(0);
+
+  useEffect(() => {
+    const unsubscribeExpenses = onSnapshot(
+      query(
+        collection(db, "expenses"),
+        where("category", "==", budget.category),
+        where("date", ">=", budget.date)
+      ),
+      (snapshot) => {
+        let total = 0;
+        snapshot.forEach((doc) => {
+          const expenseData = doc.data();
+          total += parseFloat(expenseData.amount);
+        });
+        setTotalExpenses(total);
+      }
+    );
+
+    return () => {
+      unsubscribeExpenses();
+    };
+  }, [budget.category, budget.date]);
+  //const [totalExpenses, setTotalExpenses] = useState(0);
+
+  /* useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(collection(db, "expenses"), where("budgetId", "==", budget.id)),
+      (snapshot) => {
+        let total = 0;
+        snapshot.forEach((doc) => {
+          const expenseData = doc.data();
+          total += expenseData.amount;
+        });
+        setTotalExpenses(total);
+      }
+    ); */
+
+  /* return () => {
+      unsubscribe();
+    };
+  }, [budget.id]);
+  console.log("budget id", budget.id); */
+
   const percentage = (totalExpenses / budget.amount) * 100;
   let message = `You have used ${percentage.toFixed(0)}% of your budget`;
 
@@ -21,10 +69,6 @@ const BudgetCard = ({ budget, totalExpenses }) => {
     message += "  You are near to reaching the limit! Spend wisely ";
     textColor = "#FFFF00"; // Yellow color
   }
-  const handlePress = () => {
-    console.log("Close button pressed for budget:", budget.name);
-    // You can add additional actions or logic here if needed
-  };
 
   const categoryIcons = {
     Food: require("../assets/Pizza.png"),
@@ -56,19 +100,37 @@ const BudgetCard = ({ budget, totalExpenses }) => {
   return (
     <View style={{ alignItems: "center" }}>
       <View style={styles.budgetContainer}>
-        <Text
-          style={{
-            color: categoryColors[budget.category], // Use the color from the mapping,ontSize: 16,
-            opacity: 0.9,
-            fontSize: 19,
-            fontFamily: "Lexend_Medium",
-            marginTop: 10,
-            marginLeft: 15,
-            bottom: 3,
-          }}
-        >
-          {budget.name}
-        </Text>
+        <View style={{ flexDirection: "row", flex: 1 }}>
+          <Text
+            style={{
+              color: categoryColors[budget.category], // Use the color from the mapping,ontSize: 16,
+              opacity: 0.9,
+              fontSize: 19,
+              fontFamily: "Lexend_Medium",
+              marginTop: 10,
+              marginLeft: 15,
+              bottom: 3,
+              width: 285,
+            }}
+          >
+            {budget.name}
+          </Text>
+
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => onDeleteBudget(budget.id)} // Pass budget id to onDeleteBudget
+          >
+            <Image
+              source={require("../assets/Cancel.png")}
+              style={{
+                width: 25,
+                height: 25,
+                top: 7,
+                position: "relative",
+              }}
+            />
+          </TouchableOpacity>
+        </View>
         <Text
           style={{
             color: categoryColors[budget.category], // Use the color from the mapping,ontSize: 16,
@@ -122,13 +184,7 @@ const styles = StyleSheet.create({
     top: 1,
     marginLeft: 15,
   },
-  closeButtonContainer: {
-    position: "absolute",
-    top: -1, // Adjust this value
-    right: -1, // Adjust this value
-    width: 35,
-    height: 35,
-  },
+
   budgetContainer: {
     flex: 1,
     backgroundColor: "#121112",
@@ -174,17 +230,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flex: 1,
   },
-  closeButton: {
-    position: "absolute",
+  /* closeButton: {
+    //position: "absolute",
     top: 5,
-    right: 5,
-    backgroundColor: "red",
-    borderRadius: 15,
-    width: 35,
-    height: 35,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+    right: 25,
+  }, */
   closeButtonText: {
     color: "white",
     fontSize: 26,

@@ -12,10 +12,10 @@ import Add from "./screens/Add";
 import Extra from "./screens/Extra";
 import BudgetSetting from "./screens/BudgetSetting";
 import SignUp from "./screens/Signup";
-import Test from "./screens/Test";
-import Testt from "./screens/Testt";
+import Settings from "./screens/Settings";
 import Calculator from "./screens/Calculator";
 import CurrencyConverter from "./screens/CurrencyConverter";
+import TaxCalculator from "./screens/TaxCalculator";
 
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => {
@@ -45,10 +45,11 @@ const ExtraScreen = () => (
       headerShown: false,
     }}
   >
-    <ExtraStack.Screen name="Extra" component={Extra} />
+    <ExtraStack.Screen name="ExtraNested" component={Extra} />
     <ExtraStack.Screen name="BudgetSetting" component={BudgetSetting} />
     <ExtraStack.Screen name="Calculator" component={Calculator} />
     <ExtraStack.Screen name="CurrencyConverter" component={CurrencyConverter} />
+    <ExtraStack.Screen name="TaxCalculator" component={TaxCalculator} />
   </ExtraStack.Navigator>
 );
 
@@ -126,7 +127,18 @@ const TabsScreen = () => (
         ),
       }}
     />
-    <Tabs.Screen name="test" component={Test} />
+    <Tabs.Screen
+      name="Settings"
+      component={Settings}
+      options={{
+        tabBarLabel: "", // Remove the label
+
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="settings" size={25} color={color} />
+        ),
+      }}
+    />
+    {/* <Tabs.Screen name="testt" component={Testt} /> */}
   </Tabs.Navigator>
 );
 

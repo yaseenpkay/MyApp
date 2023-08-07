@@ -24,8 +24,10 @@ import {
   collection,
   getDocs,
   addDoc,
+  doc,
   getFirestore,
   onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -40,6 +42,64 @@ const Overview = () => {
   const [income, setIncome] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
+
+  const deleteTransaction2 = async (transactionId) => {
+    console.log("Deleting transaction:", transactionId);
+
+    try {
+      // Delete the transaction from the database
+      await deleteDoc(doc(db, "expenses", transactionId));
+      console.log("Transaction deleted from the database");
+
+      // Remove the deleted transaction from the state
+      setExpenseList((prevList) =>
+        prevList.filter((item) => item.id !== transactionId)
+      );
+      console.log("Transaction removed from state");
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    }
+  };
+
+  const deleteTransaction = async (transactionId) => {
+    console.log("Deleting transaction:", transactionId);
+
+    try {
+      // Delete the transaction from the database
+      await deleteDoc(doc(db, "income", transactionId));
+      console.log("Transaction deleted from the database");
+
+      // Remove the deleted transaction from the state
+      setIncomeList((prevList) =>
+        prevList.filter((item) => item.id !== transactionId)
+      );
+      console.log("Transaction removed from state");
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    }
+  };
+
+  /* const handleTransactionDelete = async (itemId) => {
+    try {
+      // Implement the deletion logic here
+      // For example, delete the item from the database using the itemId
+
+      // Call a function to remove the item from the database
+      // For example:
+      // await deleteTransactionFromDatabase(itemId);
+
+      // After successful deletion, update the local state
+      // Remove the deleted item from the expenseList or incomeList state
+      setExpenseList((prevList) =>
+        prevList.filter((item) => item.id !== itemId)
+      );
+      setIncomeList((prevList) =>
+        prevList.filter((item) => item.id !== itemId)
+      );
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    }
+  }; */
 
   const db = getFirestore(app);
 
@@ -128,7 +188,7 @@ const Overview = () => {
     setIncome(newIncome);
   }; */
 
-  useEffect(() => {
+  /* useEffect(() => {
     const unsubscribeIncome = onSnapshot(
       collection(db, "income"),
       (snapshot) => {
@@ -153,6 +213,55 @@ const Overview = () => {
           id: doc.id,
           ...doc.data(),
         }));
+        setExpenseList(updatedExpenses);
+
+        let totalExpense = 0;
+        updatedExpenses.forEach((expense) => {
+          totalExpense += Number(expense.amount);
+        });
+        setTotalExpense(totalExpense);
+      }
+    );
+
+    return () => {
+      unsubscribeIncome();
+      unsubscribeExpense();
+    };
+  }, []); */
+
+  useEffect(() => {
+    const unsubscribeIncome = onSnapshot(
+      collection(db, "income"),
+      (snapshot) => {
+        const updatedIncome = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // Sort the income list by date in descending order
+        updatedIncome.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        setIncomeList(updatedIncome);
+
+        let totalIncome = 0;
+        updatedIncome.forEach((income) => {
+          totalIncome += Number(income.amount);
+        });
+        setTotalIncome(totalIncome);
+      }
+    );
+
+    const unsubscribeExpense = onSnapshot(
+      collection(db, "expenses"),
+      (snapshot) => {
+        const updatedExpenses = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // Sort the expense list by date in descending order
+        updatedExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         setExpenseList(updatedExpenses);
 
         let totalExpense = 0;
@@ -283,12 +392,19 @@ const Overview = () => {
           {/* <Button onPress={readData} title="read data" /> */}
           <FlatList
             data={expenseList}
-            renderItem={({ item }) => <TransactionCard2 item={item} />}
+            renderItem={({ item }) => (
+              <TransactionCard2
+                item={item}
+                onDeleteExpense={deleteTransaction2}
+              />
+            )}
             keyExtractor={(item) => item.id}
           />
           <FlatList
             data={incomeList}
-            renderItem={({ item }) => <TransactionCard item={item} />}
+            renderItem={({ item }) => (
+              <TransactionCard item={item} onDeleteIncome={deleteTransaction} />
+            )}
             keyExtractor={(item) => item.id}
           />
         </View>

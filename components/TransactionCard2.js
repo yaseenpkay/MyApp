@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const TransactionCard2 = ({ item }) => {
+const TransactionCard2 = ({ item, onDeleteExpense }) => {
   console.log(item);
 
   const categoryIcons = {
@@ -22,6 +22,21 @@ const TransactionCard2 = ({ item }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => onDeleteExpense(item.id)}
+      >
+        <Image
+          source={require("../assets/Cancel.png")}
+          style={{
+            width: 15,
+            height: 15,
+            top: 7,
+            right: -3,
+            position: "absolute",
+          }}
+        />
+      </TouchableOpacity>
       <View style={styles.leftSection}>
         <Image source={categoryImage} style={styles.image} />
       </View>
@@ -59,6 +74,12 @@ const styles = StyleSheet.create({
     height: 60,
     right: 10,
     resizeMode: "contain",
+  },
+  closeButton: {
+    position: "absolute",
+    top: -4,
+    right: 6,
+    opacity: 0.2,
   },
   centerSection: {
     flex: 2,

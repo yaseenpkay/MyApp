@@ -6,11 +6,16 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+} from "firebase/firestore";
 import app from "../firebaseConfig";
-//import { ProgressBar } from "react-native-progress"; // Import the ProgressBar component
 
 const db = getFirestore(app);
+//import { ProgressBar } from "react-native-progress"; // Import the ProgressBar component
 
 const ExpenseList = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +33,7 @@ const ExpenseList = () => {
     Other: "#7F8C8D",
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchData = async () => {
       try {
         console.log("Fetching data...");
@@ -72,6 +77,39 @@ const ExpenseList = () => {
     };
 
     fetchData();
+  }, []); */
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "expenses"), (snapshot) => {
+      const data = snapshot.docs.map((doc) => doc.data());
+
+      const categoryTotalExpenses = data.reduce((totals, expense) => {
+        const category = expense.category;
+        const amount = parseFloat(expense.amount);
+        totals[category] = (totals[category] || 0) + amount;
+        return totals;
+      }, {});
+
+      const validChartData = Object.keys(categoryTotalExpenses).map(
+        (category) => ({
+          name: category,
+          amount: categoryTotalExpenses[category],
+        })
+      );
+
+      const totalExpenseAmount = Object.values(categoryTotalExpenses).reduce(
+        (total, amount) => total + amount,
+        0
+      );
+
+      setCategoryData(validChartData);
+      setTotalExpense(totalExpenseAmount);
+      setIsLoading(false);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   if (isLoading) {
@@ -117,8 +155,8 @@ const ExpenseList = () => {
                   {((item.amount / totalExpense) * 100).toFixed(0)}%
                 </Text> */}
                 <Text style={styles.categoryAmount}>
-                  {"$"}
-                  {item.amount.toFixed(0)} / {"$"}
+                  {"₹"}
+                  {item.amount.toFixed(0)} / {"₹"}
                   {totalExpense.toFixed(0)}
                 </Text>
               </View>

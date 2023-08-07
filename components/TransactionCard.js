@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
+/* import { Swipeable } from "react-native-gesture-handler"; // Import Swipeable */
 
-const TransactionCard = ({ item }) => {
+const TransactionCard = ({ item, onDeleteIncome }) => {
   console.log(item);
   const categoryIcons = {
     Salary: require("../assets/Salary.png"),
@@ -15,8 +16,42 @@ const TransactionCard = ({ item }) => {
 
   const categoryImage = categoryIcons[item.category] || defaultImage;
 
+  const renderRightActions = () => (
+    <TouchableOpacity
+      style={styles.deleteButton}
+      onPress={() => onDelete(item.id)}
+    >
+      <Text style={styles.deleteButtonText}>Delete</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => onDeleteincome(item.id)}
+      >
+        {/* <Text
+          style={{
+            fontSize: 18,
+
+            color: "white",
+            fontFamily: "Lexend_SemiBold",
+          }}
+        >
+          x
+        </Text> */}
+        <Image
+          source={require("../assets/Cancel.png")}
+          style={{
+            width: 15,
+            height: 15,
+            top: 7,
+            right: -3,
+            position: "absolute",
+          }}
+        />
+      </TouchableOpacity>
       <View style={styles.leftSection}>
         <Image source={categoryImage} style={styles.image} />
       </View>
@@ -44,7 +79,12 @@ const styles = StyleSheet.create({
     width: 330,
     height: 70,
   },
-
+  closeButton: {
+    position: "absolute",
+    top: -4,
+    right: 6,
+    opacity: 0.2,
+  },
   leftSection: {
     flex: 1,
     alignItems: "center",
